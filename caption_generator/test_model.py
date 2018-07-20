@@ -1,7 +1,7 @@
 import pickle
 import caption_generator
 import numpy as np
-from keras.preprocessing import sequence
+from tensorflow.keras.preprocessing import sequence
 import nltk
 
 cg = caption_generator.CaptionGenerator()
@@ -57,7 +57,7 @@ def test_model(weight, img_name, beam_size = 3):
 	image = encoded_images[img_name]
 	captions = generate_captions(model, image, beam_size)
 	return process_caption(get_best_caption(captions))
-	#return [process_caption(caption[0]) for caption in get_all_captions(captions)] 
+	#return [process_caption(caption[0]) for caption in get_all_captions(captions)]
 
 def bleu_score(hypotheses, references):
 	return nltk.translate.bleu_score.corpus_bleu(references, hypotheses)
@@ -95,7 +95,7 @@ def test_model_on_images(weight, img_dir, beam_size = 3):
 		except:
 			image_captions_pair[row[0]] = [row[1]]
 	f_captions.close()
-	
+
 	hypotheses=[]
 	references = []
 	for img_name in imgs:

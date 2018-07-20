@@ -1,12 +1,10 @@
-from vgg16 import VGG16
-from keras.applications import inception_v3
+from tensorflow.keras.applications import inception_v3
 import numpy as np
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import LSTM, Embedding, TimeDistributed, Dense, RepeatVector, Merge, Activation, Flatten
-from keras.preprocessing import image, sequence
-from keras.callbacks import ModelCheckpoint
-
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Embedding, TimeDistributed, Dense, RepeatVector, Activation, Flatten, Concatenate
+from tensorflow.keras.preprocessing import image, sequence
+from tensorflow.keras.callbacks import ModelCheckpoint
 import pickle
 EMBEDDING_DIM = 128
 
@@ -125,7 +123,7 @@ class CaptionGenerator():
         lang_model.add(TimeDistributed(Dense(EMBEDDING_DIM)))
 
         model = Sequential()
-        model.add(Merge([image_model, lang_model], mode='concat'))
+        model.add(Concatenate([image_model, lang_model]))
         model.add(LSTM(1000,return_sequences=False))
         model.add(Dense(self.vocab_size))
         model.add(Activation('softmax'))
