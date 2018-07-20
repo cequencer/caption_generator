@@ -1,4 +1,4 @@
-import cPickle as pickle
+import pickle
 import caption_generator
 import numpy as np
 from keras.preprocessing import sequence
@@ -66,7 +66,7 @@ def test_model_on_images(weight, img_dir, beam_size = 3):
 	imgs = []
 	captions = {}
 	with open(img_dir, 'rb') as f_images:
-		imgs = f_images.read().strip().split('\n')
+		imgs = f_images.readlines()
 	encoded_images = pickle.load( open( "encoded_images.p", "rb" ) )
 	model = cg.create_model(ret_model = True)
 	model.load_weights(weight)
@@ -74,18 +74,18 @@ def test_model_on_images(weight, img_dir, beam_size = 3):
 	f_pred_caption = open('predicted_captions.txt', 'wb')
 
 	for count, img_name in enumerate(imgs):
-		print "Predicting for image: "+str(count)
+		print("Predicting for image: "+str(count))
 		image = encoded_images[img_name]
 		image_captions = generate_captions(model, image, beam_size)
 		best_caption = process_caption(get_best_caption(image_captions))
 		captions[img_name] = best_caption
-		print img_name+" : "+str(best_caption)
+		print(img_name+" : "+str(best_caption))
 		f_pred_caption.write(img_name+"\t"+str(best_caption))
 		f_pred_caption.flush()
 	f_pred_caption.close()
 
 	f_captions = open('Flickr8k_text/Flickr8k.token.txt', 'rb')
-	captions_text = f_captions.read().strip().split('\n')
+	captions_text = f_captions.readlines()
 	image_captions_pair = {}
 	for row in captions_text:
 		row = row.split("\t")
@@ -110,5 +110,5 @@ if __name__ == '__main__':
 	weight = 'weights-improvement-48.hdf5'
 	test_image = '3155451946_c0862c70cb.jpg'
 	test_img_dir = 'Flickr8k_text/Flickr_8k.testImages.txt'
-	#print test_model(weight, test_image)
-	print test_model_on_images(weight, test_img_dir, beam_size=3)
+	#print(test_model(weight, test_image))
+	print(test_model_on_images(weight, test_img_dir, beam_size=3))
